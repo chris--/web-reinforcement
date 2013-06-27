@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1on1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- load scripts -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="utility.js"></script>
+    <script type="text/javascript" src="QLearner.js"></script>
+    <script type="text/javascript" src="Player.js"></script>
+    <script type="text/javascript" src="Environment.js"></script>
+    <script type="text/javascript" src="Game.js"></script>
+
+    
+    <h2>game0: Normal Hunter vs manual Victim <a href="#" onClick="javascript:document.getElementById('game0_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game0_div').style.display = 'inline'">show</a></h2>
+    <div id="game0_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game0.step()">Single step</button>
+            <button onclick="javascript:game0.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game0.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game0.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game0.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game0.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game0.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game0.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game0)">Replace by manual Victim</button>
+            <a>Import <input type="file" id ="game0Import" /><a>
+            <script>document.getElementById('game0Import').addEventListener('change', function(evt){game0.importState(evt), false});</script>
+            <a href="#" id="game0Export" onclick="javascript:game0.exportState('game0Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas0"></canvas>    
+        </div>
+        <div class="chart">
+            <div id="chart_div0"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+            var options0 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas0',
+                chartDivId: 'chart_div0',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game0 = new Game(options0);
+            var victim1 = game0.addPlayer(new Position(9, 9), ManualVictim);
+            var hunter1 = game0.addPlayer(new Position(0, 0), Hunter);
+            hunter1.shufflePosition();
+        </script>
+    </div>
+
+    <h2>game1: Normal Hunter vs randomly placed still Victim <a href="#" onClick="javascript:document.getElementById('game1_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game1_div').style.display = 'inline'">show</a></h2>
+    <div id="game1_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game1.step()">Single step</button>
+            <button onclick="javascript:game1.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game1.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game1.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game1.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game1.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game1.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game1.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game1)">Replace by manual Victim</button>
+            <input type="file" id ="game1Import" />
+            <script>document.getElementById('game1Import').addEventListener('change', function(evt){game1.importState(evt), false});</script>
+            <a href="#" id="game1Export" onclick="javascript:game1.exportState('game1Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas1"></canvas>    
+        </div>
+        <div class="chart">
+            <div id="chart_div1"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+            var options1 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas1',
+                chartDivId: 'chart_div1',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game1 = new Game(options1);
+            var victim1 = game1.addPlayer(new Position(9, 9), StillVictim);
+            var hunter1 = game1.addPlayer(new Position(0, 0), Hunter);
+            hunter1.shufflePosition();
+        </script>
+    </div>
+
+    <h2>game2: Sensing Hunter vs randomly placed still Victim, sight range 3 <a href="#" onClick="javascript:document.getElementById('game2_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game2_div').style.display = 'inline'">show</a></h2>
+    <div id="game2_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game2.step()">Single step</button>
+            <button onclick="javascript:game2.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game2.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game2.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game2.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game2.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game2.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game2.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game2)">Replace by manual Victim</button>
+            <input type="file" id ="game2Import" />
+            <script>document.getElementById('game2Import').addEventListener('change', function(evt){game2.importState(evt), false});</script>
+            <a href="#" id="game2Export" onclick="javascript:game2.exportState('game2Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas2"></canvas>
+        </div>
+        <div class="chart">
+            <div id="chart_div2"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+             var options2 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas2',
+                chartDivId: 'chart_div2',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game2 = new Game(options2);
+            var victim2 = game2.addPlayer(new Position(9, 9), StillVictim);
+            victim2.shufflePosition();
+            var hunter2 = game2.addPlayer(new Position(0, 0), SensingHunter);
+            hunter2.shufflePosition();
+            hunter2.sight = 3;
+        </script>
+    </div>
+
+    <h2>game3: Sensing Hunter vs randomly placed still Victim, sight range 7 <a href="#" onClick="javascript:document.getElementById('game3_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game3_div').style.display = 'inline'">show</a></h2>
+    <div id="game3_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game3.step()">Single step</button>
+            <button onclick="javascript:game3.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game3.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game3.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game3.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game3.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game3.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game3.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game3)">Replace by manual Victim</button>
+            <input type="file" id ="game3Import" />
+            <script>document.getElementById('game3Import').addEventListener('change', function(evt){game3.importState(evt), false});</script>
+            <a href="#" id="game3Export" onclick="javascript:game3.exportState('game3Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas3"></canvas>
+        </div>
+        <div class="chart">
+            <div id="chart_div3"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+             var options3 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas3',
+                chartDivId: 'chart_div3',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game3 = new Game(options3);
+            var victim3 = game3.addPlayer(new Position(9, 9), StillVictim);
+            victim3.shufflePosition();
+            var hunter3 = game3.addPlayer(new Position(0, 0), SensingHunter);
+            hunter3.shufflePosition();
+            hunter3.sight = 7;
+        </script>
+    </div>
+
+
+    <h2>game4: Optimized Sensing Hunter vs randomly placed still Victim, sight range 7 <a href="#" onClick="javascript:document.getElementById('game4_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game4_div').style.display = 'inline'">show</a></h2>
+    <div id="game4_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game4.step()">Single step</button>
+            <button onclick="javascript:game4.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game4.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game4.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game4.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game4.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game4.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game4.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game4)">Replace by manual Victim</button>
+            <input type="file" id ="game4Import" />
+            <script>document.getElementById('game4Import').addEventListener('change', function(evt){game4.importState(evt), false});</script>
+            <a href="#" id="game4Export" onclick="javascript:game4.exportState('game4Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas4"></canvas>
+        </div>
+        <div class="chart">
+            <div id="chart_div4"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+             var options4 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas4',
+                chartDivId: 'chart_div4',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game4 = new Game(options4);
+            var victim4 = game4.addPlayer(new Position(9, 9), StillVictim);
+            victim4.shufflePosition();
+            var hunter4 = game4.addPlayer(new Position(0, 0), OptimizedSensingHunter);
+            hunter4.sight = 7;
+            hunter4.shufflePosition();
+        </script>
+    </div>
+
+
+    <h2>game5: Dual Sensing Hunter vs randomly placed still Victim, sight range 7 <a href="#" onClick="javascript:document.getElementById('game5_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game5_div').style.display = 'inline'">show</a></h2>
+    <div id="game5_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game5.step()">Single step</button>
+            <button onclick="javascript:game5.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game5.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game5.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game5.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game5.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game5.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game5.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game5)">Replace by manual Victim</button>
+            <input type="file" id ="game5Import" />
+            <script>document.getElementById('game5Import').addEventListener('change', function(evt){game5.importState(evt), false});</script>
+            <a href="#" id="game5Export" onclick="javascript:game5.exportState('game5Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas5"></canvas>
+        </div>
+        <div class="chart">
+            <div id="chart_div5"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+             var options5 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas5',
+                chartDivId: 'chart_div5',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game5 = new Game(options5);
+            var victim5 = game5.addPlayer(new Position(9, 9), StillVictim);
+            victim5.shufflePosition();
+            var hunter51 = game5.addPlayer(new Position(0, 0), SensingHunter);
+            hunter51.sight = 7;
+            hunter51.shufflePosition();
+            var hunter52 = game5.addPlayer(new Position(0, 0), SensingHunter);
+            hunter52.sight = 7;
+            hunter52.shufflePosition();
+        </script>
+    </div>
+
+    <h2>game6: Dual Team Hunter vs randomly placed still Victim, sight range 7 <a href="#" onClick="javascript:document.getElementById('game6_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game6_div').style.display = 'inline'">show</a></h2>
+    <div id="game6_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game6.step()">Single step</button>
+            <button onclick="javascript:game6.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game6.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game6.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game6.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game6.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game6.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game6.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game6)">Replace by manual Victim</button>
+            <input type="file" id ="game6Import" />
+            <script>document.getElementById('game6Import').addEventListener('change', function(evt){game6.importState(evt), false});</script>
+            <a href="#" id="game6Export" onclick="javascript:game6.exportState('game6Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas6"></canvas>
+        </div>
+        <div class="chart">
+            <div id="chart_div6"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+             var options5 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas6',
+                chartDivId: 'chart_div6',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game6 = new Game(options5);
+            var victim6 = game6.addPlayer(new Position(9, 9), StillVictim);
+            victim6.shufflePosition();
+            var hunter61 = game6.addPlayer(new Position(0, 0), TeamHunter);
+            hunter61.sight = 7;
+            hunter61.shufflePosition();
+            var hunter62 = game6.addPlayer(new Position(0, 0), TeamHunter);
+            hunter62.sight = 7;
+            hunter62.shufflePosition();
+        </script>
+    </div>
+
+    <script>
+        function replaceByManualVictim(_game) {
+            for (var i=0; i<_game.env.players.length; i++) {
+                if (_game.env.players[i] instanceof Victim) {
+                    _game.env.players[i] = new ManualVictim(_game.env.players[i].position, _game.env);
+                    _game.options.delayBetweenSteps = 150;
+                } else if (_game.env.players[i] instanceof ManualVictim) {
+                    _game.env.players[i] = new StillVictim(_game.env.players[i].position, _game.env);
+                    _game.options.delayBetweenSteps = 0;
+                }
+            }
+        }
+    </script>
+
+    
+    
+</body>
+</html>

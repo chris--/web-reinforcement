@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Environment.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: Environment.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * Enum for possible Actions
+ *
+ * @readonly
+ * @enum {number}
+ * @author Christian Vogt &lt;mail@christianvogt.de>
+ */
+var ACTIONS = {
+    up:     0,
+    right:  1,
+    down:   2,
+    left:   3
+};
+
+/**
+ * Environment. Defines the "randbedingungen"
+ *
+ * @constructor
+ * @param {int} _height the height of the environment (in pixel-like values)
+ * @param {int} _width the width of the environment (in pixel-like values)
+ * @author &lt;a href="mailto:mail@christianvogt.de">Christian Vogt&lt;/a>
+ */
+function Environment(_height, _width) {
+    this.height = _height;
+    this.width = _width;
+    this.obstacles = [];
+    this.players = [];
+    this.getResultingPosition = function (_currentPosition, _desiredPosition) {
+
+        // out of bounds check
+        if (_desiredPosition.posx &lt; 0 || _desiredPosition.posy &lt; 0 || _desiredPosition.posx >= this.width || _desiredPosition.posy >= this.height) {
+            // console.log('out of bound');
+            return _currentPosition;
+        }
+
+        // obstacle check
+        for (var i=0; i&lt;this.obstacles.length; i++) {
+            if (this.obstacles[i].position.equals(_desiredPosition)) return _currentPosition;
+        }
+
+        // other player check
+        for (var j=0; j&lt;this.players.length; j++) {
+           if (this.players[j].position.equals(_desiredPosition)) return _currentPosition;
+        }
+
+        // all right, go for it
+        return _desiredPosition;
+    };
+    this.draw = function(_canvas, _framesPerSecond, _scale) {
+        var self = this;
+        var canvas = _canvas;
+        var framesPerSecond = _framesPerSecond;
+        var scale = _scale;
+        if (!scale) {
+            scale = 50;
+        }
+        if (!framesPerSecond) {
+            framesPerSecond = 10;
+        }
+        canvas.width = this.width*scale;
+        canvas.height = this.height*scale;
+
+        // draw ground layer
+        ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // get hurdle position and draw
+        this.obstacles.forEach(function(obstacle) {
+            ctx.fillStyle = "#FA5858"; //red
+            ctx.fillRect(obstacle.position.posx*scale, obstacle.position.posy*scale, scale, scale);
+        });
+
+        // get player position and draw
+        this.players.forEach(function(player) {
+            if (player instanceof Hunter) {
+                ctx.fillStyle = "#fff"; // Hunter
+            } else if (player instanceof Victim) {
+                ctx.fillStyle = "#D7DF01"; // Victim
+            }
+            ctx.fillRect(player.position.posx*scale, player.position.posy*scale, scale, scale);
+        });
+
+        setTimeout(function(){
+            self.draw(canvas, framesPerSecond, scale);
+        }, Math.floor(1000/framesPerSecond));
+    };
+}
+/**
+ * Position 
+ *
+ * @constructor
+ * @param {int} _posx the x-coordinate
+ * @param {int} _posy the y-coordinate
+ */
+function Position(_posx, _posy) {
+    this.posx = _posx;
+    this.posy = _posy;
+    this.up = function() {
+        return new Position(this.posx, this.posy-1);
+    };
+    this.right = function() {
+        return new Position(this.posx+1, this.posy);
+    };
+    this.down = function() {
+        return new Position(this.posx, this.posy+1);
+    };
+    this.left = function() {
+        return new Position(this.posx-1, this.posy);
+    };
+    this.equals = function(_otherposition) {
+        if (!_otherposition instanceof Position) {
+            return false;
+        } else if (_otherposition.posx != this.posx) {
+            return false;
+        } else if (_otherposition.posy != this.posy) {
+            return false;
+        }
+        return true;
+    };
+    this.hash = function() {
+        return (btoa(this.posx) + btoa(this.posy));
+    };
+    this.distance = function(_otherposition) {
+        return Math.abs(_otherposition.posx-this.posx)+Math.abs(_otherposition.posy-this.posy);
+    };
+    this.directionTo = function(_otherposition, maxDistance) {
+        if (maxDistance && this.distance(_otherposition) > maxDistance) {
+            return null;
+        }
+        if (this.equals(_otherposition)) {
+            return ACTIONS.stay;
+        }
+        var candidates = [];
+        if (this.posx &lt; _otherposition.posx) { // ich bin weiter links
+            candidates.push(ACTIONS.right);
+            return ACTIONS.right;
+        } else if (this.posx > _otherposition.posx) {
+            candidates.push(ACTIONS.left);
+            return ACTIONS.left;
+        }
+        if (this.posy &lt; _otherposition.posy) { // ich bin weiter oben
+            candidates.push(ACTIONS.down);
+            return ACTIONS.down;
+        } else if (this.posy > _otherposition.posy) {
+            candidates.push(ACTIONS.up);
+            return ACTIONS.up;
+        }
+        // choose random from candidates
+        return candidates[Math.floor(Math.random()*candidates.length)];
+    };
+    this.toString = function() {
+        return JSON.stringify(this);
+    };
+}
+
+/**
+ * Obstacle
+ *
+ * Obstacle that cannot be crossed by a player
+ *
+ * @constructor
+ */
+function Obstacle(_position) {
+    this.position = _position;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Tue Jun 25 2013 18:22:28 GMT+0200 (MESZ)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

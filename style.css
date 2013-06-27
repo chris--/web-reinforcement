@@ -1,0 +1,27 @@
+h2 {
+    padding-top: 20px;
+    margin-bottom: 0;
+    clear:left;
+}
+
+.buttonPane {
+    
+}
+
+.chart {
+    width: 600px;
+    height: 220px;
+    float:left;
+    padding: 5px;
+}
+
+.gameField {
+    float:left;
+    padding: 5px;
+}
+
+.gameWrapper {
+    background-color: #eeeeee;
+    float:left;
+    display: none;
+}
