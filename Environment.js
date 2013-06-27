@@ -76,8 +76,8 @@ function Environment(_height, _width) {
         var color = {
             background: "#000",
             hunter: "#fff",
-            obstacle: "FA5858",
-            victim: "D7DF01"
+            obstacle: "#FA5858",
+            victim: "#D7DF01"
         };
         if (!scale) {
             scale = 50;
@@ -197,6 +197,7 @@ function Position(_posx, _posy) {
      * @returns {int} The distance to the other Position
      */
     this.distance = function(_otherposition) {
+        checkInstance(_otherposition, Position);
         return Math.abs(_otherposition.posx-this.posx)+Math.abs(_otherposition.posy-this.posy);
     };
 
@@ -207,6 +208,7 @@ function Position(_posx, _posy) {
      * @param {int} maxDistance The max. distance that is allowed to be seen
      */
     this.directionTo = function(_otherposition, maxDistance) {
+        checkInstance(_otherposition, Position);
         if (maxDistance && this.distance(_otherposition) > maxDistance) {
             return null;
         }
@@ -248,5 +250,6 @@ function Position(_posx, _posy) {
  * @property {Position} position The Position this obstacle uses
  */
 function Obstacle(_position) {
+    checkInstance(_position, Position);
     this.position = _position;
 }

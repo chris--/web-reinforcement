@@ -14,6 +14,7 @@
  * @property {Array} chartArray holds cumulative results for charting
  * @author Christian Vogt <mail@christianvogt.de>
  * @todo check for default and mandatory parameter
+ * @todo more options for player and its learner instance
  */
 function Game(_options) {
     this.options = _options;
@@ -176,7 +177,7 @@ function Game(_options) {
         // var last10Results = this.results.slice(this.results.length-10,this.results.length);
         return {    gamesPlayed: this.gamesPlayed,
                     stepsNeeded: {
-                        average: Math.ceil(totalAverageSteps/this.gamesPlayed+1),
+                        average: Math.ceil(totalAverageSteps/this.gamesPlayed),
                         median: Math.ceil(median(totalResultsArray))
                     },
                     playerCount: this.env.players.length
@@ -186,7 +187,8 @@ function Game(_options) {
     /**
      * Draw chart from results
      *
-     * @param {Boolean} _force Force the chart draw. If set to false only draws every 10/100/1000 results.
+     * @param {Boolean} _force Force the chart draw. If set to false only draws every 10/100/1000 
+     * results depending on the result set size.
      */
     this.drawGameChart = function(_force) {
         // check the size of the result array and push the average if reasonable
