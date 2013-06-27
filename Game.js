@@ -35,7 +35,9 @@ function Game(_options) {
      * @param {Player} _Player constructor for the player to add
      */
     this.addPlayer = function(_position, _Player) {
+        checkInstance(_position, Position);
         var player = new _Player(_position, this.env);
+        checkInstance(player, Player);
         this.env.players.push(player);
         return player;
     };
@@ -46,6 +48,7 @@ function Game(_options) {
      * @param {Position} _position
      */
     this.addObstacle = function(_position) {
+        checkInstance(_position, Position);
         this.env.obstacles.push(new Obstacle(_position));
     };
 

@@ -15,17 +15,20 @@ function median(values) {
         return (values[half-1] + values[half]) / 2.0;
 }
 
-// Load the Visualization API library and the piechart library.
+// Load the Google Visualization API library
 google.load('visualization', '1.0', {'packages':['corechart']});
-//google.setOnLoadCallback(drawChart);
 function drawChart(div, array) {
-    var chart = new google.visualization.LineChart(div);
-    var data = google.visualization.arrayToDataTable(array);
-    var options = {
-        title: 'Steps needed after x Episodes',
-        vAxis: {title: 'steps',  titleTextStyle: {color: 'red'}}
-    };
-    chart.draw(data, options);
+    try {
+        var chart = new google.visualization.LineChart(div);
+        var data = google.visualization.arrayToDataTable(array);
+        var options = {
+            title: 'Steps needed after x Episodes',
+            vAxis: {title: 'steps',  titleTextStyle: {color: 'red'}}
+        };
+        chart.draw(data, options);
+    } catch(e) {
+        console.log(e);
+    }
 }
 
 if (typeof Object.create !== 'function') {
@@ -44,7 +47,14 @@ function newFilledArray(_length, _val) {
     return array;
 }
 
+/**
+ *
+ * @todo handle primitive types (int,string)
+ */
 function checkInstance(_testObject, _instance) {
+    if (typeof _instance === 'int' || typeof _instance === 'string') {
+        throw Error('cannot check for primitive types');
+    }
     if (_testObject instanceof _instance) {
         return null;
     } else {

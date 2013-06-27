@@ -12,6 +12,9 @@
  * @todo document methods and properties
  */
 function Player(_position, _env) {
+    checkInstance(_position, Position);
+    checkInstance(_env, Environment);
+
     this.position = _position;
     this.startPosition = JSON.stringify(_position);
     this.env = _env;

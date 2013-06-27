@@ -38,6 +38,8 @@ function Environment(_height, _width) {
      * @returns {Position} the Position actually reached
      */
     this.getResultingPosition = function (_currentPosition, _desiredPosition) {
+        checkInstance(_currentPosition, Position);
+        checkInstance(_desiredPosition, Position);
 
         // out of bounds check
         if (_desiredPosition.posx < 0 || _desiredPosition.posy < 0 || _desiredPosition.posx >= this.width || _desiredPosition.posy >= this.height) {

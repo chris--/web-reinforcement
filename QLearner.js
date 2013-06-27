@@ -7,6 +7,8 @@
  * @author Christian Vogt <mail@christianvogt.de>
  */
 function QLearner(_player) {
+    checkInstance(_player, Player);
+
     this.player = _player;
     this.stateTable = {};
     this.alpha = 0.1; // learning rate 0:dont learn anything
