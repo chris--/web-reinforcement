@@ -171,7 +171,7 @@ function Hunter(_position, _env) {
                 }
             }
         }
-        this.goalReached = false;
+        // this.goalReached = false;
         return -1;
     };
 }
@@ -360,3 +360,28 @@ function ManualVictim(_position, _env) {
 }
 ManualVictim.prototype = Object.create(Victim.prototype);
 ManualVictim.prototype.constructor = ManualVictim;
+
+/**
+ * This hunter has a huge stateTable because it hashes its position with the position of the victim. 
+ * Use with care as it will take forever to train him.
+ *
+ * @namepsace Player.Hunter
+ * @constructor
+ * @extends Hunter
+ * @param {Position} _position the starting position of this player
+ * @param {Environment} _env the environment this player exists in 
+ */
+function AllKnowingHunter(_position, _env) {
+    Hunter.call(this, _position, _env);
+    this.hash = function() {
+        var hash = this.position.hash();
+        for (var i=0; i<this.env.players.length; i++) {
+            if (this.env.players[i] instanceof Victim) {
+                hash += this.env.players[i].position.hash();
+            }
+        }
+        return hash;
+    };
+}
+AllKnowingHunter.prototype = Object.create(Hunter.prototype);
+AllKnowingHunter.prototype.constructor = AllKnowingHunter;

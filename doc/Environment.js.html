@@ -29,7 +29,7 @@
  * Enum for possible Actions
  *
  * @readonly
- * @enum {number}
+ * @enum {int}
  * @author Christian Vogt &lt;mail@christianvogt.de>
  */
 var ACTIONS = {
@@ -40,19 +40,33 @@ var ACTIONS = {
 };
 
 /**
- * Environment. Defines the "randbedingungen"
+ * Defines the "randbedingungen"
  *
  * @constructor
- * @param {int} _height the height of the environment (in pixel-like values)
- * @param {int} _width the width of the environment (in pixel-like values)
- * @author &lt;a href="mailto:mail@christianvogt.de">Christian Vogt&lt;/a>
+ * @param {int} _height The height of the environment (in pixel-like values)
+ * @param {int} _width The width of the environment (in pixel-like values)
+ * @property {int} height The height of the environment (in pixel-like values)
+ * @property {int} width The width of the environment (in pixel-like values)
+ * @property {Array} obstacles Array containing the obstacles of this environment
+ * @property {Array} players Array containing the players in this environment
+ * @author Christian Vogt &lt;mail@christianvogt.de>
  */
 function Environment(_height, _width) {
     this.height = _height;
     this.width = _width;
     this.obstacles = [];
     this.players = [];
+
+    /**
+     * Determine the resulting Position if moved from one position to another and return it.
+     *
+     * @param {Position} _currentPosition the current Position
+     * @param {Position} _desiredPosition the desired Position of the Player
+     * @returns {Position} the Position actually reached
+     */
     this.getResultingPosition = function (_currentPosition, _desiredPosition) {
+        checkInstance(_currentPosition, Position);
+        checkInstance(_desiredPosition, Position);
 
         // out of bounds check
         if (_desiredPosition.posx &lt; 0 || _desiredPosition.posy &lt; 0 || _desiredPosition.posx >= this.width || _desiredPosition.posy >= this.height) {
@@ -73,11 +87,25 @@ function Environment(_height, _width) {
         // all right, go for it
         return _desiredPosition;
     };
+
+    /**
+     * Draws the current environment in the specified `canvas` with a framerate of `framesPerSecond` and a scaling factor `scale`.
+     *
+     * @param {window.canvas} _canvas The DomElement this environment shall be drawed into
+     * @param {int} _framesPerSecond Times to draw per second (fps)
+     * @param {int} _scale Factor this canvas scales the pixel-like size of the environment
+     */
     this.draw = function(_canvas, _framesPerSecond, _scale) {
         var self = this;
         var canvas = _canvas;
         var framesPerSecond = _framesPerSecond;
         var scale = _scale;
+        var color = {
+            background: "#000",
+            hunter: "#fff",
+            obstacle: "#FA5858",
+            victim: "#D7DF01"
+        };
         if (!scale) {
             scale = 50;
         }
@@ -89,21 +117,21 @@ function Environment(_height, _width) {
 
         // draw ground layer
         ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#000";
+        ctx.fillStyle = color.background;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // get hurdle position and draw
         this.obstacles.forEach(function(obstacle) {
-            ctx.fillStyle = "#FA5858"; //red
+            ctx.fillStyle = color.obstacle; //red
             ctx.fillRect(obstacle.position.posx*scale, obstacle.position.posy*scale, scale, scale);
         });
 
         // get player position and draw
         this.players.forEach(function(player) {
             if (player instanceof Hunter) {
-                ctx.fillStyle = "#fff"; // Hunter
+                ctx.fillStyle = color.hunter; // Hunter
             } else if (player instanceof Victim) {
-                ctx.fillStyle = "#D7DF01"; // Victim
+                ctx.fillStyle = color.victim; // Victim
             }
             ctx.fillRect(player.position.posx*scale, player.position.posy*scale, scale, scale);
         });
@@ -113,28 +141,62 @@ function Environment(_height, _width) {
         }, Math.floor(1000/framesPerSecond));
     };
 }
+
 /**
  * Position 
  *
  * @constructor
  * @param {int} _posx the x-coordinate
  * @param {int} _posy the y-coordinate
+ * @property {int} posx the x-coordinate
+ * @property {int} posy the y-coordinate
  */
 function Position(_posx, _posy) {
     this.posx = _posx;
     this.posy = _posy;
+
+    /**
+     * Moves up (y+1)
+     *
+     * @returns {Position} The resulting position
+     */
     this.up = function() {
         return new Position(this.posx, this.posy-1);
     };
+
+    /**
+     * Moves right (x+1)
+     *
+     * @returns {Position} The resulting position
+     */
     this.right = function() {
         return new Position(this.posx+1, this.posy);
     };
+
+    /**
+     * Moves down (y+1)
+     *
+     * @returns {Position} The resulting position
+     */
     this.down = function() {
         return new Position(this.posx, this.posy+1);
     };
+
+    /**
+     * Moves left (x-1)
+     *
+     * @returns {Position} The resulting position
+     */
     this.left = function() {
         return new Position(this.posx-1, this.posy);
     };
+
+    /**
+     * Determine if `otherposition` is the same as this position
+     *
+     * @param {Position} _otherposition The other Position
+     * @returns {Boolean} If this position equals the `otherposition`
+     */
     this.equals = function(_otherposition) {
         if (!_otherposition instanceof Position) {
             return false;
@@ -145,37 +207,61 @@ function Position(_posx, _posy) {
         }
         return true;
     };
+
+    /**
+     * Hash this Position to string
+     *
+     * @returns {String}
+     */
     this.hash = function() {
         return (btoa(this.posx) + btoa(this.posy));
     };
+
+    /**
+     * Determine the distance to another Position
+     * 
+     * @param {Position} _otherposition The other Position
+     * @returns {int} The distance to the other Position
+     */
     this.distance = function(_otherposition) {
+        checkInstance(_otherposition, Position);
         return Math.abs(_otherposition.posx-this.posx)+Math.abs(_otherposition.posy-this.posy);
     };
+
+    /**
+     * Determine the direction to another Position with a max. sight range of `maxDistance`
+     *
+     * @param {Position} _otherposition The position to get the direction to
+     * @param {int} maxDistance The max. distance that is allowed to be seen
+     */
     this.directionTo = function(_otherposition, maxDistance) {
+        checkInstance(_otherposition, Position);
         if (maxDistance && this.distance(_otherposition) > maxDistance) {
             return null;
         }
         if (this.equals(_otherposition)) {
-            return ACTIONS.stay;
+            return null;
         }
         var candidates = [];
         if (this.posx &lt; _otherposition.posx) { // ich bin weiter links
             candidates.push(ACTIONS.right);
-            return ACTIONS.right;
         } else if (this.posx > _otherposition.posx) {
             candidates.push(ACTIONS.left);
-            return ACTIONS.left;
         }
         if (this.posy &lt; _otherposition.posy) { // ich bin weiter oben
             candidates.push(ACTIONS.down);
-            return ACTIONS.down;
         } else if (this.posy > _otherposition.posy) {
             candidates.push(ACTIONS.up);
-            return ACTIONS.up;
         }
         // choose random from candidates
         return candidates[Math.floor(Math.random()*candidates.length)];
     };
+
+    /**
+     * Returns a string of this position
+     *
+     * @returns {String} The string value
+     */
     this.toString = function() {
         return JSON.stringify(this);
     };
@@ -187,8 +273,11 @@ function Position(_posx, _posy) {
  * Obstacle that cannot be crossed by a player
  *
  * @constructor
+ * @param {Position} _position The Position this obstacle uses
+ * @property {Position} position The Position this obstacle uses
  */
 function Obstacle(_position) {
+    checkInstance(_position, Position);
     this.position = _position;
 }</code></pre>
         </article>
@@ -200,13 +289,13 @@ function Obstacle(_position) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="AllKnowingHunter.html">AllKnowingHunter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li><li><a href="global.html#checkInstance">checkInstance</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Tue Jun 25 2013 18:22:28 GMT+0200 (MESZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sat Jun 29 2013 13:14:54 GMT+0200 (MESZ)
 </footer>
 
 <script> prettyPrint(); </script>

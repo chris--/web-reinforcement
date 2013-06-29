@@ -47,7 +47,7 @@
     
     
     <div class="description">
-        Environment. Defines the "randbedingungen"
+        Defines the "randbedingungen"
     </div>
     
 
@@ -97,7 +97,7 @@
             
             
             
-            <td class="description last">the height of the environment (in pixel-like values)</td>
+            <td class="description last">The height of the environment (in pixel-like values)</td>
         </tr>
 	
 	
@@ -120,7 +120,7 @@
             
             
             
-            <td class="description last">the width of the environment (in pixel-like values)</td>
+            <td class="description last">The width of the environment (in pixel-like values)</td>
         </tr>
 	
 	
@@ -130,6 +130,126 @@
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The height of the environment (in pixel-like values)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The width of the environment (in pixel-like values)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>obstacles</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Array containing the obstacles of this environment</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>players</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Array containing the players in this environment</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -144,7 +264,7 @@
     <dt class="tag-author">Author:</dt>
     <dd class="tag-author">
         <ul>
-            <li>&lt;a href="mailto:mail@christianvogt.de">Christian Vogt&lt;/a></li>
+            <li><a href="mailto:mail@christianvogt.de">Christian Vogt</a></li>
         </ul>
     </dd>
     
@@ -158,7 +278,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line23">line 23</a>
+        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line27">line 27</a>
     </li></ul></dd>
     
     
@@ -199,6 +319,335 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(_canvas, _framesPerSecond, _scale)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws the current environment in the specified `canvas` with a framerate of `framesPerSecond` and a scaling factor `scale`.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>_canvas</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">window.canvas</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The DomElement this environment shall be drawed into</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>_framesPerSecond</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Times to draw per second (fps)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>_scale</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Factor this canvas scales the pixel-like size of the environment</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line71">line 71</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getResultingPosition"><span class="type-signature"></span>getResultingPosition<span class="signature">(_currentPosition, _desiredPosition)</span><span class="type-signature"> &rarr; {<a href="Position.html">Position</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Determine the resulting Position if moved from one position to another and return it.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>_currentPosition</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Position.html">Position</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the current Position</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>_desiredPosition</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Position.html">Position</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the desired Position of the Player</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Environment.js.html">Environment.js</a>, <a href="Environment.js.html#line40">line 40</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    the Position actually reached
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Position.html">Position</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -213,13 +662,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="AllKnowingHunter.html">AllKnowingHunter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li><li><a href="global.html#checkInstance">checkInstance</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Tue Jun 25 2013 18:22:28 GMT+0200 (MESZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sat Jun 29 2013 13:14:55 GMT+0200 (MESZ)
 </footer>
 
 <script> prettyPrint(); </script>

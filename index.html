@@ -318,7 +318,7 @@
         </div>
         <!-- setup game -->
         <script>
-             var options5 = {
+             var options6 = {
                 delayBetweenSteps: 0,
                 width: 11,
                 height: 11,
@@ -329,7 +329,7 @@
                     fps: 200
                 }
             };
-            var game6 = new Game(options5);
+            var game6 = new Game(options6);
             var victim6 = game6.addPlayer(new Position(9, 9), StillVictim);
             victim6.shufflePosition();
             var hunter61 = game6.addPlayer(new Position(0, 0), TeamHunter);
@@ -340,6 +340,197 @@
             hunter62.shufflePosition();
         </script>
     </div>
+
+    <h2>game7: Hunter vs manual Victim in Maze <a href="#" onClick="javascript:document.getElementById('game7_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game7_div').style.display = 'inline'">show</a></h2>
+    <div id="game7_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game7.step()">Single step</button>
+            <button onclick="javascript:game7.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game7.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game7.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game7.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game7.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game7.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game7.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game7)">Replace by manual Victim</button>
+            <a>Import <input type="file" id ="game7Import" /><a>
+            <script>document.getElementById('game7Import').addEventListener('change', function(evt){game7.importState(evt), false});</script>
+            <a href="#" id="game7Export" onclick="javascript:game7.exportState('game7Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas7"></canvas>    
+        </div>
+        <div class="chart">
+            <div id="chart_div7"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+            var options7 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas7',
+                chartDivId: 'chart_div7',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game7 = new Game(options7);
+            game7.addObstacle(new Position(0,1));
+            game7.addObstacle(new Position(1,1));
+            game7.addObstacle(new Position(2,1));
+            game7.addObstacle(new Position(3,1));
+            game7.addObstacle(new Position(4,1));
+            game7.addObstacle(new Position(5,1));
+            game7.addObstacle(new Position(7,1));
+            game7.addObstacle(new Position(8,1));
+            game7.addObstacle(new Position(9,1));
+            game7.addObstacle(new Position(10,1));
+            game7.addObstacle(new Position(5,2));
+            game7.addObstacle(new Position(5,3));
+            game7.addObstacle(new Position(5,5));
+            game7.addObstacle(new Position(4,5));
+            game7.addObstacle(new Position(3,5));
+            game7.addObstacle(new Position(3,4));
+            game7.addObstacle(new Position(3,3));
+            game7.addObstacle(new Position(2,3));
+            game7.addObstacle(new Position(1,3));
+            game7.addObstacle(new Position(0,5));
+            game7.addObstacle(new Position(1,5));
+            game7.addObstacle(new Position(1,6));
+            game7.addObstacle(new Position(1,8));
+            game7.addObstacle(new Position(0,8));
+            game7.addObstacle(new Position(2,8));
+            game7.addObstacle(new Position(3,8));
+            game7.addObstacle(new Position(4,8));
+            game7.addObstacle(new Position(5,8));
+            game7.addObstacle(new Position(5,7));
+            game7.addObstacle(new Position(6,5));
+            game7.addObstacle(new Position(7,5));
+            game7.addObstacle(new Position(8,5));
+            game7.addObstacle(new Position(9,5));
+            game7.addObstacle(new Position(9,6));
+            game7.addObstacle(new Position(9,7));
+            game7.addObstacle(new Position(9,8));
+            game7.addObstacle(new Position(9,9));
+            game7.addObstacle(new Position(8,9));
+            game7.addObstacle(new Position(7,9));
+            game7.addObstacle(new Position(7,8));
+            game7.addObstacle(new Position(7,7));
+            game7.addObstacle(new Position(1,10));
+            game7.addObstacle(new Position(3,9));
+            game7.addObstacle(new Position(5,10));
+            game7.addObstacle(new Position(7,3));
+            game7.addObstacle(new Position(8,3));
+            game7.addObstacle(new Position(9,3));
+            game7.addObstacle(new Position(9,4));
+
+            
+
+            var victim1 = game7.addPlayer(new Position(0, 0), ManualVictim);
+            var hunter1 = game7.addPlayer(new Position(1, 0), Hunter);
+            hunter1.shufflePosition();
+        </script>
+    </div>
+
+    <h2>game8: Hunter vs manual Victim in Maze <a href="#" onClick="javascript:document.getElementById('game8_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game8_div').style.display = 'inline'">show</a></h2>
+    <div id="game8_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game8.step()">Single step</button>
+            <button onclick="javascript:game8.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game8.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game8.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game8.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game8.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game8.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game8.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game8)">Replace by manual Victim</button>
+            <a>Import <input type="file" id ="game8Import" /><a>
+            <script>document.getElementById('game8Import').addEventListener('change', function(evt){game8.importState(evt), false});</script>
+            <a href="#" id="game8Export" onclick="javascript:game8.exportState('game8Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas8"></canvas>    
+        </div>
+        <div class="chart">
+            <div id="chart_div8"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+            var options8 = {
+                delayBetweenSteps: 0,
+                width: 100,
+                height: 100,
+                canvasId: 'canvas8',
+                chartDivId: 'chart_div8',
+                draw: {
+                    scale: 10,
+                    fps: 200
+                }
+            };
+            var game8 = new Game(options8);
+            game8.addObstacle(new Position(0,1));
+            game8.addObstacle(new Position(1,1));
+            game8.addObstacle(new Position(2,1));
+            game8.addObstacle(new Position(3,1));
+            game8.addObstacle(new Position(4,1));
+            game8.addObstacle(new Position(5,1));
+            game8.addObstacle(new Position(7,1));
+            game8.addObstacle(new Position(8,1));
+            game8.addObstacle(new Position(9,1));
+            game8.addObstacle(new Position(10,1));
+            game8.addObstacle(new Position(5,2));
+            game8.addObstacle(new Position(5,3));
+            game8.addObstacle(new Position(5,5));
+            game8.addObstacle(new Position(4,5));
+            game8.addObstacle(new Position(3,5));
+            game8.addObstacle(new Position(3,4));
+            game8.addObstacle(new Position(3,3));
+            game8.addObstacle(new Position(2,3));
+            game8.addObstacle(new Position(1,3));
+            game8.addObstacle(new Position(0,5));
+            game8.addObstacle(new Position(1,5));
+            game8.addObstacle(new Position(1,6));
+            game8.addObstacle(new Position(1,8));
+            game8.addObstacle(new Position(0,8));
+            game8.addObstacle(new Position(2,8));
+            game8.addObstacle(new Position(3,8));
+            game8.addObstacle(new Position(4,8));
+            game8.addObstacle(new Position(5,8));
+            game8.addObstacle(new Position(5,7));
+            game8.addObstacle(new Position(6,5));
+            game8.addObstacle(new Position(7,5));
+            game8.addObstacle(new Position(8,5));
+            game8.addObstacle(new Position(9,5));
+            game8.addObstacle(new Position(9,6));
+            game8.addObstacle(new Position(9,7));
+            game8.addObstacle(new Position(9,8));
+            game8.addObstacle(new Position(9,9));
+            game8.addObstacle(new Position(8,9));
+            game8.addObstacle(new Position(7,9));
+            game8.addObstacle(new Position(7,8));
+            game8.addObstacle(new Position(7,7));
+            game8.addObstacle(new Position(1,10));
+            game8.addObstacle(new Position(3,9));
+            game8.addObstacle(new Position(5,10));
+            game8.addObstacle(new Position(7,3));
+            game8.addObstacle(new Position(8,3));
+            game8.addObstacle(new Position(9,3));
+            game8.addObstacle(new Position(9,4));
+
+            
+
+            var victim1 = game8.addPlayer(new Position(0, 0), ManualVictim);
+            var hunter1 = game8.addPlayer(new Position(1, 0), Hunter);
+            hunter1.shufflePosition();
+        </script>
+    </div>
+
 
     <script>
         function replaceByManualVictim(_game) {

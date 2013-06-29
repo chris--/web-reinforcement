@@ -29,51 +29,105 @@
  * Player instance
  *
  * @constructor
- * @param {Position} _position the starting position of this player
- * @param {Environment} _env the environment this player exists in
+ * @param {Position} _position The starting position of this player
+ * @param {Environment} _env The environment this player exists in
+ * @property {Position} position The starting position of this player
+ * @property {Environment} env The environment this player exists in
+ * @property {QLearner} qlearner The associated lerner
+ * @property {Boolean} goalReached Set to `true` if the players's goal is reached
  * @author Christian Vogt &lt;mail@christianvogt.de>
  * @todo document methods and properties
  */
 function Player(_position, _env) {
+    checkInstance(_position, Position);
+    checkInstance(_env, Environment);
+
     this.position = _position;
     this.startPosition = JSON.stringify(_position);
     this.env = _env;
     this.qlearner = new QLearner(this);
     this.goalReached = false;
+
+    /**
+     * Move the Player with help of the learner
+     *
+     */
     this.move = function(_cb) {
-        // ask q learner where to go
         this.qlearner.move(_cb);
     };
+
+    /**
+     * Moves this Player up
+     * 
+     * @returns {Player} Me
+     */
     this.moveUp = function() {
         this.position = this.env.getResultingPosition(this.position, this.position.up());
         return this;
     };
+
+    /**
+     * Moves this Player right
+     * 
+     * @returns {Player} Me
+     */
     this.moveRight = function() {
         this.position = this.env.getResultingPosition(this.position, this.position.right());
         return this;
     };
+
+    /**
+     * Moves this Player down
+     * 
+     * @returns {Player} Me
+     */
     this.moveDown = function() {
         this.position = this.env.getResultingPosition(this.position, this.position.down());
         return this;
     };
+
+    /**
+     * Moves this Player left
+     * 
+     * @returns {Player} Me
+     */
     this.moveLeft = function() {
         this.position = this.env.getResultingPosition(this.position, this.position.left());
         return this;
     };
+
+    /**
+     * Doesnt do anything
+     * 
+     * @returns {Player} Me
+     */
     this.stay = function() {
         return this;
     };
+
+    /**
+     * Performs the given action, and returns the resulting Position.
+     *
+     * @param {ACTIONS} _action The Action to perform 
+     * @returns {Position} The resulting position
+     * @todo why do we call `reward()` here?
+     */
     this.performAction = function(_action) {
         switch (_action) {
             case ACTIONS.up: this.moveUp(); break;
             case ACTIONS.right: this.moveRight(); break;
             case ACTIONS.down: this.moveDown(); break;
             case ACTIONS.left: this.moveLeft(); break;
-            case ACTIONS.stay: this.stay(); break;
         }
         this.reward();
         return this.position;
     };
+
+    /**
+     * Determine if the player is stuck, i.e. cannot move anywhere
+     * 
+     * @returns {Boolean} `true` if the player is stuck
+     */
     this.amIStuck = function() {
         var pos;
         pos = this.env.getResultingPosition(this.position, this.position.up());
@@ -86,6 +140,7 @@ function Player(_position, _env) {
         if (!pos.equals(this.position)) return false;
         return true;
     };
+
     /** 
      * Identifies the player in the environment. This is used by the learner to build the `ACTIONS` table.
      * Can be overridden by agents that shall perform differently.
@@ -106,10 +161,18 @@ function Player(_position, _env) {
     this.reward = function() {
         return 0;
     };
+
+
+    /**
+     * Shuffle this players position.
+     * 
+     * @returns {Position} The resulting Position
+     */
     this.shufflePosition = function() {
         var x = Math.floor(Math.random() * this.env.width);
         var y = Math.floor(Math.random() * this.env.height);
-        this.position = new Position(x, y);
+        this.position = this.env.getResultingPosition(this.position, new Position(x, y));
+        //return this.position;
     };
 }
 
@@ -135,7 +198,7 @@ function Hunter(_position, _env) {
                 }
             }
         }
-        this.goalReached = false;
+        // this.goalReached = false;
         return -1;
     };
 }
@@ -204,8 +267,8 @@ Victim.prototype.constructor = Victim;
 function StillVictim(_position, _env) {
     Victim.call(this, _position, _env);
     this.performAction = function(_action) {
-        this.stay();
-        return this.position;
+        // this.stay();
+        return new Position(this.position.posx, this.position.posy);
     };
 }
 StillVictim.prototype = Object.create(Victim.prototype);
@@ -324,6 +387,31 @@ function ManualVictim(_position, _env) {
 }
 ManualVictim.prototype = Object.create(Victim.prototype);
 ManualVictim.prototype.constructor = ManualVictim;
+
+/**
+ * This hunter has a huge stateTable because it hashes its position with the position of the victim. 
+ * Use with care as it will take forever to train him.
+ *
+ * @namepsace Player.Hunter
+ * @constructor
+ * @extends Hunter
+ * @param {Position} _position the starting position of this player
+ * @param {Environment} _env the environment this player exists in 
+ */
+function AllKnowingHunter(_position, _env) {
+    Hunter.call(this, _position, _env);
+    this.hash = function() {
+        var hash = this.position.hash();
+        for (var i=0; i&lt;this.env.players.length; i++) {
+            if (this.env.players[i] instanceof Victim) {
+                hash += this.env.players[i].position.hash();
+            }
+        }
+        return hash;
+    };
+}
+AllKnowingHunter.prototype = Object.create(Hunter.prototype);
+AllKnowingHunter.prototype.constructor = AllKnowingHunter;
 </code></pre>
         </article>
     </section>
@@ -334,13 +422,13 @@ ManualVictim.prototype.constructor = ManualVictim;
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="AllKnowingHunter.html">AllKnowingHunter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li><li><a href="global.html#checkInstance">checkInstance</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Tue Jun 25 2013 18:22:28 GMT+0200 (MESZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sat Jun 29 2013 13:14:54 GMT+0200 (MESZ)
 </footer>
 
 <script> prettyPrint(); </script>

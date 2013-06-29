@@ -64,7 +64,7 @@ function Environment(_height, _width) {
     /**
      * Draws the current environment in the specified `canvas` with a framerate of `framesPerSecond` and a scaling factor `scale`.
      *
-     * @param {window[canvas]} _canvas The DomElement this environment shall be drawed into
+     * @param {window.canvas} _canvas The DomElement this environment shall be drawed into
      * @param {int} _framesPerSecond Times to draw per second (fps)
      * @param {int} _scale Factor this canvas scales the pixel-like size of the environment
      */

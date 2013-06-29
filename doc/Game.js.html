@@ -41,6 +41,7 @@
  * @property {Array} chartArray holds cumulative results for charting
  * @author Christian Vogt &lt;mail@christianvogt.de>
  * @todo check for default and mandatory parameter
+ * @todo more options for player and its learner instance
  */
 function Game(_options) {
     this.options = _options;
@@ -62,7 +63,9 @@ function Game(_options) {
      * @param {Player} _Player constructor for the player to add
      */
     this.addPlayer = function(_position, _Player) {
+        checkInstance(_position, Position);
         var player = new _Player(_position, this.env);
+        checkInstance(player, Player);
         this.env.players.push(player);
         return player;
     };
@@ -73,6 +76,7 @@ function Game(_options) {
      * @param {Position} _position
      */
     this.addObstacle = function(_position) {
+        checkInstance(_position, Position);
         this.env.obstacles.push(new Obstacle(_position));
     };
 
@@ -96,7 +100,8 @@ function Game(_options) {
     };
 
     /**
-     * Perform a step in the game, i.e. every player moves once. Check if the game is over after one complete move
+     * Perform a step in the game, meaning that the active player moves once. 
+     * Check if the game is over after one complete move
      *
      * @returns {Boolean} whether the game is over
      */
@@ -110,7 +115,7 @@ function Game(_options) {
         if (this.gameDebug) console.log('Game:\t\t Active Player: #' + this.activePlayer);
 
         var player = this.env.players[this.activePlayer];
-        if(!player.manual) player.move();
+        if(!(player instanceof ManualVictim)) player.move();
 
         if(this.isGameOver()) {
             return true;
@@ -134,7 +139,7 @@ function Game(_options) {
     };
 
     /** 
-     * Delete all results, flush Players qLearner
+     * Delete all results, flush players qLearner
      *
      */
      this.reset = function() {
@@ -148,10 +153,10 @@ function Game(_options) {
         this.restart();
      };
 
-     /**
-      * Run a number of games in sync, i.e. wait for the game to stop before starting the next one
-      *
-      */
+    /**
+     * Run a number of games in sync, i.e. wait for the game to stop before starting the next one.
+     *
+     */
     this.autoRunGame = function (_times) {
         var timesToRun = _times;
         var self = this;
@@ -170,7 +175,7 @@ function Game(_options) {
      *
      * @returns {Boolean} whether the game is finished (true) or not (false)
      */
-     this.isGameOver = function() {
+    this.isGameOver = function() {
         for (var i=0; i&lt;this.env.players.length; i++) {
             if(this.env.players[i].goalReached) {
                 // console.log('Game finished in ' + Math.floor(this.stepsPlayed/this.env.players.length) + ' rounds. We played ' + this.gamesPlayed + ' games so far');
@@ -185,10 +190,10 @@ function Game(_options) {
      };
 
     /**
-    * Calculate results.
-    *
-    * @returns {Object} containing the number of played games, steps needed in avg. and median and the player count 
-    */
+     * Calculate results.
+     *
+     * @returns {Object} containing the number of played games, steps needed in avg. and median and the player count 
+     */
     this.printResults = function() {
         var totalAverageSteps = 0;
         var totalResultsArray = [];
@@ -199,7 +204,7 @@ function Game(_options) {
         // var last10Results = this.results.slice(this.results.length-10,this.results.length);
         return {    gamesPlayed: this.gamesPlayed,
                     stepsNeeded: {
-                        average: Math.ceil(totalAverageSteps/this.gamesPlayed+1),
+                        average: Math.ceil(totalAverageSteps/this.gamesPlayed),
                         median: Math.ceil(median(totalResultsArray))
                     },
                     playerCount: this.env.players.length
@@ -209,11 +214,13 @@ function Game(_options) {
     /**
      * Draw chart from results
      *
+     * @param {Boolean} _force Force the chart draw. If set to false only draws every 10/100/1000 
+     * results depending on the result set size.
      */
-    this.drawGameChart = function(force) {
+    this.drawGameChart = function(_force) {
         // check the size of the result array and push the average if reasonable
         var resultCount = this.chartArray.length;
-        if (force) {
+        if (_force) {
             drawChart(document.getElementById(this.options.chartDivId), this.chartArray);
         } else if (resultCount > 10 && resultCount &lt;= 100) {
             drawChart(document.getElementById(this.options.chartDivId), this.chartArray);
@@ -227,7 +234,7 @@ function Game(_options) {
     /**
      * Export the current games state. Can be imported via `importState()`. This will only work on HTML5 capable browsers.
      *
-     * @param {String} _divName the name of the dom element that will hold the link to export
+     * @param {String} _divName The name of the dom element that will hold the link to export.
      */
     this.exportState = function(_divName) {
         var a = document.getElementById(_divName);
@@ -255,7 +262,7 @@ function Game(_options) {
     /**
      * Import a saved state into the game
      *
-     * @param {Event} _evt event from the filepicker
+     * @param {Event} _evt Event from the filepicker.
      */
     this.importState = function(_evt) {
         var self = this;
@@ -294,13 +301,13 @@ function Game(_options) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="AllKnowingHunter.html">AllKnowingHunter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li><li><a href="global.html#checkInstance">checkInstance</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Tue Jun 25 2013 18:22:28 GMT+0200 (MESZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sat Jun 29 2013 13:14:54 GMT+0200 (MESZ)
 </footer>
 
 <script> prettyPrint(); </script>

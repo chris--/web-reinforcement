@@ -135,7 +135,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line8">line 8</a>
+        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line9">line 9</a>
     </li></ul></dd>
     
     
@@ -143,6 +143,13 @@
     
     
     
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>wire up options</li>
+        </ul>
+    </dd>
     
 </dl>
 
@@ -189,7 +196,7 @@
     
     
     <div class="description">
-        Choose an action based on the given actionValues
+        Choose an action based on the given `_actionValues`
     </div>
     
 
@@ -270,7 +277,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line60">line 60</a>
+        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line54">line 54</a>
     </li></ul></dd>
     
     
@@ -378,7 +385,7 @@
             
             
             
-            <td class="description last">the hash for the stateTable</td>
+            <td class="description last">the hash for the stateTable entry</td>
         </tr>
 	
 	
@@ -409,7 +416,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line85">line 85</a>
+        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line79">line 79</a>
     </li></ul></dd>
     
     
@@ -434,7 +441,7 @@
     
             
 <div class="param-desc">
-    the action values for this hash or default
+    the action values for this hash or a default set (0)
 </div>
 
 
@@ -459,7 +466,7 @@
         
             
 <dt>
-    <h4 class="name" id="move"><span class="type-signature"></span>move<span class="signature">(_player)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="move"><span class="type-signature"></span>move<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -467,7 +474,7 @@
     
     
     <div class="description">
-        Move player
+        Move player based on the current stateTable and the rewards for the next actions
     </div>
     
 
@@ -475,54 +482,6 @@
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>_player</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Player.html">Player</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">the Player to move</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -548,7 +507,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line21">line 21</a>
+        <a href="QLearner.js.html">QLearner.js</a>, <a href="QLearner.js.html#line22">line 22</a>
     </li></ul></dd>
     
     
@@ -589,13 +548,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="AllKnowingHunter.html">AllKnowingHunter</a></li><li><a href="Environment.html">Environment</a></li><li><a href="Game.html">Game</a></li><li><a href="Obstacle.html">Obstacle</a></li><li><a href="Player.html">Player</a></li><li><a href="Player.Hunter.html">Hunter</a></li><li><a href="Player.ManualVictim.html">ManualVictim</a></li><li><a href="Player.OptimizedSensingHunter.html">OptimizedSensingHunter</a></li><li><a href="Player.SensingHunter.html">SensingHunter</a></li><li><a href="Player.StillVictim.html">StillVictim</a></li><li><a href="Player.TeamHunter.html">TeamHunter</a></li><li><a href="Player.Victim.html">Victim</a></li><li><a href="Position.html">Position</a></li><li><a href="QLearner.html">QLearner</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ACTIONS">ACTIONS</a></li><li><a href="global.html#checkInstance">checkInstance</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Tue Jun 25 2013 18:22:29 GMT+0200 (MESZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0</a> on Sat Jun 29 2013 13:14:55 GMT+0200 (MESZ)
 </footer>
 
 <script> prettyPrint(); </script>
