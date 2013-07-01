@@ -430,13 +430,13 @@
 
             
 
-            var victim1 = game7.addPlayer(new Position(0, 0), ManualVictim);
-            var hunter1 = game7.addPlayer(new Position(1, 0), Hunter);
-            hunter1.shufflePosition();
+            var victim7 = game7.addPlayer(new Position(0, 0), ManualVictim);
+            var hunter7 = game7.addPlayer(new Position(1, 0), Hunter);
+            hunter7.shufflePosition();
         </script>
     </div>
 
-    <h2>game8: Hunter vs manual Victim in Maze <a href="#" onClick="javascript:document.getElementById('game8_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game8_div').style.display = 'inline'">show</a></h2>
+    <h2>game8: Hunter vs manual Victim in huge Maze <a href="#" onClick="javascript:document.getElementById('game8_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game8_div').style.display = 'inline'">show</a></h2>
     <div id="game8_div" class="gameWrapper">
         <div class="buttonpane">
             <button onclick="javascript:game8.step()">Single step</button>
@@ -525,12 +525,75 @@
 
             
 
-            var victim1 = game8.addPlayer(new Position(0, 0), ManualVictim);
-            var hunter1 = game8.addPlayer(new Position(1, 0), Hunter);
-            hunter1.shufflePosition();
+            var victim8 = game8.addPlayer(new Position(0, 0), ManualVictim);
+            var hunter8 = game8.addPlayer(new Position(1, 0), Hunter);
+            hunter8.shufflePosition();
         </script>
     </div>
 
+    <h2>game9: Dual Stuck Team Hunter vs randomly placed still Victim, sight range 7 <a href="#" onClick="javascript:document.getElementById('game9_div').style.display = 'none'">hide</a>/<a href="#" onClick="javascript:document.getElementById('game9_div').style.display = 'inline'">show</a></h2>
+    <div id="game9_div" class="gameWrapper">
+        <div class="buttonpane">
+            <button onclick="javascript:game9.step()">Single step</button>
+            <button onclick="javascript:game9.autoRunGame(1)">Sync: Play game</button>
+            <button onclick="javascript:game9.autoRunGame(100)">Sync: Play 100 games</button>
+            <button onclick="javascript:game9.autoRunGame(1000)">Sync: Play 1000 games</button>
+            <button onclick="javascript:game9.autoRunGame(10000)">Sync: Play 10000 games</button>
+            <br/>
+            <button onclick="javascript:var i=100;while(i--){game9.play()}">Async: Play 100 games</button>
+            <button onclick="javascript:var i=1000;while(i--){game9.play()}">Async: Play 1000 games</button>
+            <button onclick="javascript:var i=2000;while(i--){game9.play()}">Async: Play 2000 games</button>
+            <br />
+            <button onclick="javascript:replaceByManualVictim(game9)">Replace by manual Victim</button>
+            <input type="file" id ="game9Import" />
+            <script>document.getElementById('game9Import').addEventListener('change', function(evt){game9.importState(evt), false});</script>
+            <a href="#" id="game9Export" onclick="javascript:game9.exportState('game9Export')">export</a>            
+        </div>
+        <div class="gameField">
+            <canvas id="canvas9"></canvas>
+        </div>
+        <div class="chart">
+            <div id="chart_div9"></div>
+        </div>
+        <!-- setup game -->
+        <script>
+             var options9 = {
+                delayBetweenSteps: 0,
+                width: 11,
+                height: 11,
+                canvasId: 'canvas9',
+                chartDivId: 'chart_div9',
+                draw: {
+                    scale: 20,
+                    fps: 200
+                }
+            };
+            var game9 = new Game(options9);
+
+            var victim9 = game9.addPlayer(new Position(9, 9), Victim);
+            victim9.shufflePosition();
+
+            var hunter91 = game9.addPlayer(new Position(0, 0), StuckTeamHunter);
+            hunter91.sight = 7;
+            hunter91.shufflePosition();
+            hunter91.qlearner.alpha = 0.8;
+
+            var hunter92 = game9.addPlayer(new Position(0, 0), StuckTeamHunter);
+            hunter92.sight = 7;
+            hunter92.shufflePosition();
+            hunter92.qlearner.alpha = 0.8;
+
+            var hunter93 = game9.addPlayer(new Position(0, 0), StuckTeamHunter);
+            hunter93.sight = 7;
+            hunter93.shufflePosition();
+            hunter93.qlearner.alpha = 0.8;
+
+            var hunter94 = game9.addPlayer(new Position(0, 0), StuckTeamHunter);
+            hunter94.sight = 7;
+            hunter94.shufflePosition();
+            hunter94.qlearner.alpha = 0.8;
+        </script>
+    </div>
 
     <script>
         function replaceByManualVictim(_game) {

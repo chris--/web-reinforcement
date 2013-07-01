@@ -314,11 +314,12 @@ OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
         }
     };
     this.hash = function() {
-        var hash = this.position.hash();
+        var hash = this.position.hash(); // my position
         for (var i=0; i<this.env.players.length; i++) {
+            hash += this.sense(this.env.players[i]);
             if (this.env.players[i] instanceof Victim && this.sense(this.env.players[i]) !== false) {
-                hash += this.sense(this.env.players[i]);
-                hash += this.askOtherTeamHunter(this.env.players[i]);
+                //hash += this.sense(this.env.players[i]); // my sensing
+                hash += this.askOtherTeamHunter(this.env.players[i]); // the other hunters senses
             }
         }
         return hash;
@@ -326,6 +327,42 @@ OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
  }
  TeamHunter.prototype = Object.create(SensingHunter.prototype);
  TeamHunter.prototype.constructor = TeamHunter;
+
+/**
+ * Tries to stuck the victim
+ *
+ * @namespace Player.StuckTeamHunter
+ * @constructor
+ * @extends TeamHunter
+ * @param {Position} _position the starting position of this player
+ * @param {Environment} _env the environment this player exists in 
+ */
+ function StuckTeamHunter(_position, _env) {
+    TeamHunter.call(this, _position, _env);
+    this.reward = function() {
+        for(var i=0; i<this.env.players.length; i++) {
+            if (this.env.players[i] instanceof Victim) {
+                // find victims
+                var victim = this.env.players[i];
+                if ( this.position.distance(victim.position) <= 1 ) { // distance to victim <=1? then check if the victim cannot move anymore
+                    if ( !this.env.getResultingPosition(victim.position, victim.position.up()).equals(victim.position) ) return 5;
+                    if ( !this.env.getResultingPosition(victim.position, victim.position.right()).equals(victim.position) ) return 5;
+                    if ( !this.env.getResultingPosition(victim.position, victim.position.down()).equals(victim.position) ) return 5;
+                    if ( !this.env.getResultingPosition(victim.position, victim.position.left()).equals(victim.position) ) return 5;
+                    console.log('success');
+                    this.goalReached = true;
+                    return 100;
+                } else if ( this.position.distance(victim.position) <= 3 ) {
+                    //return 1;
+                }
+            }
+        }
+        // this.goalReached = false;
+        return -1;
+    };
+ }
+ StuckTeamHunter.prototype = Object.create(TeamHunter.prototype);
+ StuckTeamHunter.prototype.constructor = StuckTeamHunter;
 
 /**
  * Controllable by keyboard
