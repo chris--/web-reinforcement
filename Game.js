@@ -22,12 +22,25 @@ function Game(_options) {
     this.env.draw(document.getElementById(this.options.canvasId), this.options.draw.fps, this.options.draw.scale);
     this.stepsPlayed = 0;
     this.gamesPlayed = 0;
+    this.stepsAverage = 0;
     this.activePlayer = 0;
     this.gameDebug = false;
-    this.gameHalted = false;
     this.results = [];
-    this.chartArray = [];
-    this.chartArray.push(['games run', 'steps average', 'steps median']);
+
+    this.saveResult = function() {
+        this.stepsAverage = this.stepsAverage+(this.stepsPlayed-this.stepsAverage)/this.gamesPlayed;
+
+        if (this.gamesPlayed < 100) {
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), this.stepsPlayed]);
+        } else if (this.gamesPlayed < 1000 && this.gamesPlayed%10 === 0) {
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), this.stepsPlayed]);
+        } else if (this.gamesPlayed >= 1000 && this.gamesPlayed%100 === 0) {
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), this.stepsPlayed]);
+        } else {
+            return;
+        }
+        this.drawGameChart();
+    };
 
     /**
      * Add a Hunter to the game
@@ -79,18 +92,19 @@ function Game(_options) {
      * @returns {Boolean} whether the game is over
      */
     this.step = function () {
-        if (this.gameHalted) {
-            if (this.gameDebug) console.log('Game:\t\t Halted. Wont move until flag is false');
-            return true;
-        }
         this.stepsPlayed++;
         this.activePlayer = (++this.activePlayer)%this.env.players.length;
         if (this.gameDebug) console.log('Game:\t\t Active Player: #' + this.activePlayer);
 
         var player = this.env.players[this.activePlayer];
-        if(!(player instanceof ManualVictim)) player.move();
+        player.move();
 
         if(this.isGameOver()) {
+            // let the other players make a last move to get their rewards for the game
+            var currentPlayer = this.activePlayer;
+            for (var i=0; i<this.env.players.length; i++) {
+                if (i !== currentPlayer) this.env.players[i].move();
+            }
             return true;
         } else {
             return false;
@@ -102,13 +116,14 @@ function Game(_options) {
      *
      */
     this.restart = function() {
-        this.stepsPlayed = 0;
         this.gamesPlayed++;
+        this.saveResult();
+
+        this.stepsPlayed = 0;
         this.env.players.forEach(function(player){
             player.shufflePosition();
             player.goalReached = false;
         });
-        this.gameHalted = false;
     };
 
     /** 
@@ -151,11 +166,6 @@ function Game(_options) {
     this.isGameOver = function() {
         for (var i=0; i<this.env.players.length; i++) {
             if(this.env.players[i].goalReached) {
-                // console.log('Game finished in ' + Math.floor(this.stepsPlayed/this.env.players.length) + ' rounds. We played ' + this.gamesPlayed + ' games so far');
-                this.results.push({gamesPlayed:this.gamesPlayed+1, stepsNeeded:Math.ceil(this.stepsPlayed/this.env.players.length)});
-                this.chartArray.push([this.gamesPlayed, this.printResults().stepsNeeded.average, this.printResults().stepsNeeded.median]);
-                this.drawGameChart();
-                this.gameHalted = true;
                 return true;
             }
         }
@@ -163,45 +173,14 @@ function Game(_options) {
      };
 
     /**
-     * Calculate results.
+     * Draw chart from results, prepend labels
      *
-     * @returns {Object} containing the number of played games, steps needed in avg. and median and the player count 
      */
-    this.printResults = function() {
-        var totalAverageSteps = 0;
-        var totalResultsArray = [];
-        this.results.forEach(function(result){
-            totalResultsArray.push(result.stepsNeeded);
-            totalAverageSteps += result.stepsNeeded;
-        });
-        // var last10Results = this.results.slice(this.results.length-10,this.results.length);
-        return {    gamesPlayed: this.gamesPlayed,
-                    stepsNeeded: {
-                        average: Math.ceil(totalAverageSteps/this.gamesPlayed),
-                        median: Math.ceil(median(totalResultsArray))
-                    },
-                    playerCount: this.env.players.length
-                };
-    };
-
-    /**
-     * Draw chart from results
-     *
-     * @param {Boolean} _force Force the chart draw. If set to false only draws every 10/100/1000 
-     * results depending on the result set size.
-     */
-    this.drawGameChart = function(_force) {
+    this.drawGameChart = function() {
         // check the size of the result array and push the average if reasonable
-        var resultCount = this.chartArray.length;
-        if (_force) {
-            drawChart(document.getElementById(this.options.chartDivId), this.chartArray);
-        } else if (resultCount > 10 && resultCount <= 100) {
-            drawChart(document.getElementById(this.options.chartDivId), this.chartArray);
-        } else if (resultCount > 100 && resultCount <= 1000) {
-            if (this.gamesPlayed%10 === 0) drawChart(document.getElementById(this.options.chartDivId), this.chartArray);
-        } else if (resultCount > 1000) {
-            if (this.gamesPlayed%100 === 0) drawChart(document.getElementById(this.options.chartDivId), this.chartArray);
-        }
+        var resultCount = this.results.length;
+        var data = [['games run', 'steps average', 'steps median']].concat(this.results);
+        drawChart(document.getElementById(this.options.chartDivId), data);
     };
 
     /**
@@ -215,7 +194,7 @@ function Game(_options) {
             options: this.options,
             players: [],
             results: this.results,
-            chartArray: this.chartArray,
+            stepsAverage: this.stepsAverage,
             gamesPlayed: this.gamesPlayed
         };
         this.env.players.forEach(function(player){
@@ -256,12 +235,11 @@ function Game(_options) {
 
             // load results
             self.results = state.results;
-            self.chartArray = state.chartArray;
+            self.stepsAverage = state.stepsAverage;
             self.gamesPlayed = state.gamesPlayed;
 
             // render results
-            self.drawGameChart(true);
-            self.gameHalted = false;
+            self.drawGameChart();
         };
     };
 }
