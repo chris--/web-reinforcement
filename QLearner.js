@@ -13,7 +13,7 @@ function QLearner(_player) {
     this.stateTable = {};
     this.alpha = 0.1; // learning rate 0:dont learn anything
     this.gamma = 0.9; // discount factor
-    this.exploration = 0.1; //exploration rate
+    this.epsilon = 0.1; // exploration rate
 
     /**
      * Move player based on the current stateTable and the rewards for the next actions
