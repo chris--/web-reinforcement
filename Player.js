@@ -258,39 +258,15 @@ StillVictim.prototype.constructor = StillVictim;
  */
 function OptimizedSensingHunter(_position, _env) {
     SensingHunter.call(this, _position, _env);
-    this.currentDistanceToTarget = 0;
-    this.hash = function() {
-        var hash = this.position.hash();
-        for (var i=0; i<this.env.players.length; i++) {
-            if (this.env.players[i] instanceof Victim && this.sense(this.env.players[i]) !== false) {
-                hash += this.sense(this.env.players[i]);
-                hash += this.position.distance(this.env.players[i].position);
-            }
+    this.sense = function(_player) {
+        if (this.position.distance(_player.position) <= this.sight) {
+            var result = this.position.directionTo(_player.position);
+            result += this.position.distance(_player.position);
+            return result;
+        } else {
+            return false;
         }
-        return hash;
     };
-/*    this.reward = function() {
-        for(var i=0; i<this.env.players.length; i++) {
-            if (this.env.players[i] instanceof Victim) {
-                // find victims
-                var victim = this.env.players[i];
-                if ( this.position.distance(victim.position) <= 1 ) { // distance to victim <1? then win!
-                    this.goalReached = true;
-                    return 100;
-                } else if ( this.position.distance(victim.position) < this.currentDistanceToTarget) {
-                    this.currentDistanceToTarget = this.position.distance(victim.position);
-                    this.goalReached = false;
-                    // the distance got lesser, give reward
-                    return 1;
-                } else if ( this.position.distance(victim.position) >= this.currentDistanceToTarget) {
-                    this.currentDistanceToTarget = this.position.distance(victim.position);
-                    // this distance got greater, punish
-                    this.goalReached = false;
-                    return -2;
-                }
-            }
-        }
-    };*/
 }
 OptimizedSensingHunter.prototype = Object.create(SensingHunter.prototype);
 OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
@@ -307,11 +283,13 @@ OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
  function TeamHunter(_position, _env) {
     SensingHunter.call(this, _position, _env);
     this.askOtherTeamHunter = function(_victim) {
+        var results = [];
         for (var i=0; i<this.env.players.length; i++) {
             if (this.env.players[i] instanceof TeamHunter && this.env.players[i] !== this) {
-                return this.env.players[i].sense(_victim);
+                results.push(this.env.players[i].sense(_victim));
             }
         }
+        return results;
     };
     this.hash = function() {
         var hash = this.position.hash(); // my position
@@ -319,7 +297,9 @@ OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
             hash += this.sense(this.env.players[i]);
             if (this.env.players[i] instanceof Victim && this.sense(this.env.players[i]) !== false) {
                 //hash += this.sense(this.env.players[i]); // my sensing
-                hash += this.askOtherTeamHunter(this.env.players[i]); // the other hunters senses
+                var direction = this.askOtherTeamHunter(this.env.players[i]); // the other hunters senses
+                if (direction) hash += direction;
+                else hash += 'notSensed';
             }
         }
         return hash;
@@ -344,12 +324,11 @@ OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
             if (this.env.players[i] instanceof Victim) {
                 // find victims
                 var victim = this.env.players[i];
-                if ( this.position.distance(victim.position) <= 1 ) { // distance to victim <=1? then check if the victim cannot move anymore
-                    if ( !this.env.getResultingPosition(victim.position, victim.position.up()).equals(victim.position) ) return 5;
+                if ( this.position.distance(victim.position) <= 1 && (victim.amIStuck() === true)) { // distance to victim <=1? then check if the victim cannot move anymore
+                    /*if ( !this.env.getResultingPosition(victim.position, victim.position.up()).equals(victim.position) ) return 5;
                     if ( !this.env.getResultingPosition(victim.position, victim.position.right()).equals(victim.position) ) return 5;
                     if ( !this.env.getResultingPosition(victim.position, victim.position.down()).equals(victim.position) ) return 5;
-                    if ( !this.env.getResultingPosition(victim.position, victim.position.left()).equals(victim.position) ) return 5;
-                    console.log('success');
+                    if ( !this.env.getResultingPosition(victim.position, victim.position.left()).equals(victim.position) ) return 5;*/
                     this.goalReached = true;
                     return 100;
                 } else if ( this.position.distance(victim.position) <= 3 ) {
@@ -359,6 +338,24 @@ OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
         }
         // this.goalReached = false;
         return -1;
+    };
+    this.hash = function() {
+        var hash = '';
+        this.sight = 99;
+        for (var i=0; i<this.env.players.length; i++) {
+            if (this.env.players[i] instanceof Victim && this.sense(this.env.players[i]) !== false) {
+                hash += 'victim';
+                hash += this.position.distance(this.env.players[i].position); // distance to victim
+                hash += this.sense(this.env.players[i]); // direction to victim
+                hash += this.askOtherTeamHunter(this.env.players[i]).toString(); // the other hunters directions to victim
+            }
+            /*if (this.env.players[i] instanceof Hunter) {
+                hash += 'hunter';
+                hash += this.sense(this.env.players[i]); // direction to my team
+                hash += this.position.distance(this.env.players[i].position); // distance to my team
+            }*/
+        }
+        return hash;
     };
  }
  StuckTeamHunter.prototype = Object.create(TeamHunter.prototype);
@@ -375,6 +372,7 @@ OptimizedSensingHunter.prototype.constructor = OptimizedSensingHunter;
  */
 function ManualVictim(_position, _env) {
     StillVictim.call(this, _position, _env);
+    this.move = function(){};
     this.shufflePosition = function() {
 
     };
