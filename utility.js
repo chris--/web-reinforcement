@@ -16,19 +16,40 @@ function median(values) {
 }
 
 // Load the Google Visualization API library
-google.load('visualization', '1.0', {'packages':['corechart']});
-function drawChart(div, array) {
-    try {
-        var chart = new google.visualization.LineChart(div);
-        var data = google.visualization.arrayToDataTable(array);
-        var options = {
+google.load('visualization', '1.0', {'packages':['controls']});
+function drawChart(dashboardDiv, array) {
+
+    // add divs for filter and chart
+    var chartDiv = document.createElement("div");
+    chartDiv.id = dashboardDiv.id + "_chart";
+    var filterDiv = document.createElement("div");
+    filterDiv.id = dashboardDiv.id + "_filter";
+    dashboardDiv.appendChild(chartDiv);
+    dashboardDiv.appendChild(filterDiv);
+
+    // initialize components
+    var dashboard = new google.visualization.Dashboard(dashboardDiv);
+    var rangeSlider = new google.visualization.ControlWrapper({
+      'controlType': 'NumberRangeFilter',
+      'containerId': filterDiv.id,
+      'options': {
+        'filterColumnLabel': 'games run'
+      }
+    });
+    var chart = new google.visualization.ChartWrapper({
+        'chartType': 'LineChart',
+        'containerId': chartDiv.id,
+        'options': {
             title: 'Steps needed after x Episodes',
-            vAxis: {title: 'steps',  titleTextStyle: {color: 'red'}}
-        };
-        chart.draw(data, options);
-    } catch(e) {
-        console.log(e);
-    }
+            vAxis: {title: 'steps/ StateTable size',  titleTextStyle: {color: 'red'}},
+            legend: 'bottom'
+        }
+    });
+
+    dashboard.bind(rangeSlider, chart);
+    var data = google.visualization.arrayToDataTable(array);
+    dashboard.draw(data);
+
 }
 
 if (typeof Object.create !== 'function') {

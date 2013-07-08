@@ -31,11 +31,11 @@ function Game(_options) {
         this.stepsAverage = this.stepsAverage+(this.stepsPlayed-this.stepsAverage)/this.gamesPlayed;
 
         if (this.gamesPlayed < 100) {
-            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), this.stepsPlayed]);
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
         } else if (this.gamesPlayed < 1000 && this.gamesPlayed%10 === 0) {
-            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), this.stepsPlayed]);
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
         } else if (this.gamesPlayed >= 1000 && this.gamesPlayed%100 === 0) {
-            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), this.stepsPlayed]);
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
         } else {
             return;
         }
@@ -179,7 +179,7 @@ function Game(_options) {
     this.drawGameChart = function() {
         // check the size of the result array and push the average if reasonable
         var resultCount = this.results.length;
-        var data = [['games run', 'steps average', 'steps median']].concat(this.results);
+        var data = [['games run', 'steps average', 'stateTable size 1st hunter']].concat(this.results);
         drawChart(document.getElementById(this.options.chartDivId), data);
     };
 
