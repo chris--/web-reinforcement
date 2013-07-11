@@ -189,7 +189,7 @@ Hunter.prototype.constructor = Hunter;
  */
 function SensingHunter(_position, _env) {
     Hunter.call(this, _position, _env);
-    this.sight = 10;
+    this.sight = 0;
     this.hash = function() {
         var hash = this.position.hash();
         for (var i=0; i<this.env.players.length; i++) {

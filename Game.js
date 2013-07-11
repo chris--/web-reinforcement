@@ -34,7 +34,11 @@ function Game(_options) {
             this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
         } else if (this.gamesPlayed < 1000 && this.gamesPlayed%10 === 0) {
             this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
-        } else if (this.gamesPlayed >= 1000 && this.gamesPlayed%100 === 0) {
+        } else if (this.gamesPlayed < 1000 && this.gamesPlayed%100 === 0) {
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
+        } else if (this.gamesPlayed < 10000 && this.gamesPlayed%1000 === 0) {
+            this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
+        } else if (this.gamesPlayed >= 10000 && this.gamesPlayed%5000 === 0) {
             this.results.push([this.gamesPlayed, Math.ceil(this.stepsAverage), Object.keys(this.env.players[1].qlearner.stateTable).length]);
         } else {
             return;
@@ -136,8 +140,7 @@ function Game(_options) {
         });
         this.gamesPlayed = 0;
         this.results = [];
-        this.chartArray = [];
-        this.drawGameChart(true);
+        this.drawGameChart();
         this.restart();
      };
 
